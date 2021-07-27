@@ -1,5 +1,6 @@
 const expect = require("chai").expect;
 const Test = require("../src/stubAsyn");
+const indexPage = require("../src/indexPage");
 const sinon = require("sinon");
 const assert = require("assert");
 
@@ -30,5 +31,52 @@ describe("Check for the async function", () => {
     expect(res.status).to.be.equal(200);
     expect(spy.calledOnce).to.be.true;
     expect(test.dummyData.getCall(0).args.length).to.equal(0);
+    spy.restore();
+  });
+
+  context("Check with Stub", () => {
+    it("shoud check for the user is logged in or not", () => {
+      let user = {
+        isLoggedIn: () => {},
+      };
+      const isLoggedInStub = sinon.stub(user, "isLoggedIn").returns(true);
+      // expect(user.isLoggedIn.calledOnce).to.be.true;
+      let req = {
+        user: user,
+      };
+
+      let res = {
+        send: sinon.spy(),
+      };
+
+      indexPage.getIndexPage(req, res);
+      expect(res.send.calledOnce).to.be.true;
+      expect(res.send.firstCall.args[0]).to.equal("Welcome");
+      expect(isLoggedInStub.calledOnce).to.be.true;
+    });
+
+    it("Shoud fail if not authenticated", () => {
+      let user = {
+        isLoggedIn: () => {},
+      };
+
+      let stub = sinon.stub(user, "isLoggedIn").returns(false);
+      let req = {
+        user: user,
+      };
+      let res = {
+        send: sinon.spy(),
+      };
+
+      // excute the function
+      try {
+        indexPage.getIndexPage(req, res);
+        expect(res.send.calledOnce).to.be.true;
+      } catch (error) {
+        expect((error) => {
+          return error;
+        }).to.throw(Error("User is not authenticated"));
+      }
+    });
   });
 });

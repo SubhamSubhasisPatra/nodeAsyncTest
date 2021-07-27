@@ -14,4 +14,11 @@ module.exports = class Test {
     let res = await fetch(url);
     return res;
   }
+
+  get testForPromise() {
+    return (async () => {
+      const res = await this.dummyData();
+      console.log(res);
+    })();
+  }
 };
