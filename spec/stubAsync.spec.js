@@ -73,10 +73,10 @@ describe("Check for the async function", () => {
         indexPage.getIndexPage(req, res);
         expect(res.send.calledOnce).to.be.true;
       } catch (error) {
-        expect((error) => {
-          return error;
-        }).to.throw(Error("User is not authenticated"));
+        expect(error.message).to.be.equal("User is not authenticated");
+      } finally {
       }
+      expect.fail("Should have thrown");
     });
   });
 });

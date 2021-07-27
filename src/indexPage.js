@@ -4,6 +4,6 @@ module.exports = {
     if (req.user.isLoggedIn()) {
       return res.send("Welcome");
     }
-    throw Error("User is not authenticated");
+    throw new Error("User is not authenticated");
   },
 };
