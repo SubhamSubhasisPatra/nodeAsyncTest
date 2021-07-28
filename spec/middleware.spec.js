@@ -2,6 +2,7 @@ const expect = require("chai").expect;
 const sinon = require("sinon");
 const request = require("request");
 const middleware = require("../src/middleware");
+const pubsub = require("pubsub-js");
 
 describe("With mock : getPhotosByAlbumId", () => {
   it("should getPhotosByAlbumId", (done) => {
@@ -41,6 +42,25 @@ describe("With mock : getPhotosByAlbumId", () => {
       requestMock.verify();
       requestMock.restore();
       done();
+    });
+  });
+  context("Check With Pubsum-js", () => {
+    it("Shoud Call all the subscribers when exception", () => {
+      let myApi = {
+        greetUser: (msg, data) => {
+          console.log(msg);
+        },
+      };
+
+      // add the obj that you want to mock
+      const mock = sinon.mock(myApi);
+      mock.expects("greetUser").once().withArgs("hey Subham", null);
+
+      pubsub.subscribe("hey Subham", myApi.greetUser);
+      pubsub.publishSync("hey Subham", null);
+
+      mock.verify();
+      mock.restore();
     });
   });
 });
