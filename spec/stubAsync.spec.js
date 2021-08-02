@@ -53,6 +53,7 @@ describe("Check for the async function", () => {
       expect(res.send.calledOnce).to.be.true;
       expect(res.send.firstCall.args[0]).to.equal("Welcome");
       expect(isLoggedInStub.calledOnce).to.be.true;
+      // console.log(isLoggedInStub);
     });
 
     it("Shoud fail if not authenticated", () => {
